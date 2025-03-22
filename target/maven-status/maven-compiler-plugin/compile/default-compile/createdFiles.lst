@@ -1,0 +1,3 @@
+com\example\afas\attendance_frontend\AttendanceFrontendApplication.class
+com\example\afas\attendance_frontend\controller\FrontendController.class
+com\example\afas\attendance_frontend\config\AppConfig.class

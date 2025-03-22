@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Known Faces</title>
+    <style>
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        nav ul li {
+            float: left;
+        }
+        nav ul li a {
+            display: block;
+            color: white;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            background-color: #111;
+        }
+        .content {
+            margin: 20px;
+        }
+        .face-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        .face-container img {
+            width: 150px;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a th:href="@{/}">Home</a></li>
+      <li><a th:href="@{/viewAttendance}">View Attendance</a></li>
+      <li><a th:href="@{/captureLiveFace}">Capture Live Face</a></li>
+      <li><a th:href="@{/attendanceControl}">Attendance Control</a></li>
+      <li><a th:href="@{/knownFaces}">Known Faces</a></li>
+      <li><a th:href="@{/status}">System Status</a></li>
+    </ul>
+  </nav>
+  <div class="content">
+    <h1>Known Faces</h1>
+    <div>
+      <div th:if="${knownFaces == null || #lists.isEmpty(knownFaces)}">
+          <p>No known faces available.</p>
+      </div>
+      <div th:each="face : ${knownFaces}" class="face-container">
+         <img th:src="@{'https://python-backend-production-aa78.up.railway.app/known_faces/' + ${face}}" alt="Face Image" />
+         <p th:text="${face}">Face Name</p>
+      </div>
+    </div>
+    <div th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+  </div>
+</body>
+</html>

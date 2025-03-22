@@ -1,18 +1,15 @@
-# Stage 1: Build the JAR file using Maven
-FROM maven:3.8.6-openjdk-21 AS build
-WORKDIR /app
-# Copy all project files to the container
-COPY . .
-# Build the project and skip tests for faster build times
-RUN mvn clean install -DskipTests
+# Use an official OpenJDK 23 image
+FROM openjdk:23-jdk-slim
 
-# Stage 2: Run the Spring Boot application using a lightweight JDK 23 image
-FROM openjdk:21-jdk-slim
+# Set the working directory inside the container
 WORKDIR /app
-# Copy the built jar file from the previous stage.
-# Make sure the jar name matches what Maven produces.
-COPY --from=build /app/target/attendance-frontend-0.0.1-SNAPSHOT.jar app.jar
-# Expose the port that your Spring Boot application listens on (typically 8080)
+
+# Copy the built jar file from the target directory into the container.
+# Replace 'your-frontend-app.jar' with the actual name of your jar file.
+COPY target/attendance-frontend-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose the port your Spring Boot app runs on (typically 8080)
 EXPOSE 8080
-# Run the application
+
+# Run your Spring Boot application
 ENTRYPOINT ["java", "-jar", "app.jar"]
