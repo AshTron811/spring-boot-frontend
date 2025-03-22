@@ -5,7 +5,7 @@ COPY . .
 RUN mvn clean install -DskipTests
 
 # Use a lightweight OpenJDK image to run the app
-FROM openjdk:23-jdk-slim
+FROM openjdk:23-jdk
 WORKDIR /app
 
 # Copy the built JAR file from the previous stage
