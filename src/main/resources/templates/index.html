@@ -2,30 +2,42 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Attendance System Frontend - Home</title>
+  <title>Attendance System - Home</title>
   <style>
-    nav { background-color: #333; overflow: hidden; }
-    nav ul { list-style-type: none; margin: 0; padding: 0; }
-    nav ul li { float: left; }
+    nav {
+      background-color: #333;
+      overflow: hidden;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    nav ul li {
+      float: left;
+    }
     nav ul li a {
       display: block;
       color: white;
-      text-align: center;
       padding: 14px 16px;
       text-decoration: none;
     }
-    nav ul li a:hover { background-color: #111; }
-    .content { margin: 20px; }
+    nav ul li a:hover {
+      background-color: #111;
+    }
+    .content {
+      margin: 20px;
+    }
   </style>
 </head>
 <body>
-  <!-- Navigation Menu -->
   <nav>
     <ul>
       <li><a th:href="@{/}">Home</a></li>
       <li><a th:href="@{/viewAttendance}">View Attendance</a></li>
       <li><a th:href="@{/captureLiveFace}">Capture Live Face</a></li>
       <li><a th:href="@{/attendanceControl}">Attendance Control</a></li>
+      <li><a th:href="@{/knownFaces}">Known Faces</a></li>
       <li><a th:href="@{/status}">System Status</a></li>
     </ul>
   </nav>

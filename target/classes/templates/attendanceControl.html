@@ -4,65 +4,31 @@
     <meta charset="UTF-8">
     <title>Attendance Control</title>
     <style>
-        /* Navigation styling */
-        nav {
-            background-color: #333;
-            overflow: hidden;
-        }
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-        nav ul li {
-            float: left;
-        }
-        nav ul li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-        nav ul li a:hover {
-            background-color: #111;
-        }
-        .content {
-            margin: 20px;
-        }
-        .button-container {
-            margin: 20px 0;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-        .video-container {
-            margin-top: 20px;
-        }
-        video {
-            width: 640px;
-            height: 480px;
-            background-color: black;
-        }
+      nav { background-color: #333; overflow: hidden; }
+      nav ul { list-style: none; margin: 0; padding: 0; }
+      nav ul li { float: left; }
+      nav ul li a { display: block; color: white; padding: 14px 16px; text-decoration: none; }
+      nav ul li a:hover { background-color: #111; }
+      .content { margin: 20px; }
+      .button-container { margin: 20px 0; }
+      button { padding: 10px 20px; font-size: 16px; }
+      .video-container { margin-top: 20px; }
+      video { width: 640px; height: 480px; background-color: black; }
     </style>
 </head>
 <body>
-    <!-- Navigation Menu -->
     <nav>
       <ul>
           <li><a th:href="@{/}">Home</a></li>
           <li><a th:href="@{/viewAttendance}">View Attendance</a></li>
           <li><a th:href="@{/captureLiveFace}">Capture Live Face</a></li>
           <li><a th:href="@{/attendanceControl}">Attendance Control</a></li>
+          <li><a th:href="@{/knownFaces}">Known Faces</a></li>
           <li><a th:href="@{/status}">System Status</a></li>
       </ul>
     </nav>
-    
     <div class="content">
         <h1>Attendance Control</h1>
-        
-        <!-- Button controls for starting and stopping attendance -->
         <div class="button-container">
             <form th:action="@{/startAttendance}" method="post" style="display:inline;">
                 <button type="submit">Start Attendance</button>
@@ -71,40 +37,29 @@
                 <button type="submit">Stop Attendance</button>
             </form>
         </div>
-        
-        <!-- Live camera feed -->
         <div class="video-container">
             <h2>Live Camera Feed</h2>
             <video id="video" autoplay playsinline></video>
         </div>
-        
-        <!-- Display status message -->
         <div>
             <p th:text="${controlMessage}">Status message will appear here.</p>
         </div>
     </div>
 
     <script>
-      // Get reference to the video element
       const video = document.getElementById('video');
-
-      // Request access to the user's camera with explicit constraints
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          navigator.mediaDevices.getUserMedia({
-              video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
-          })
-          .then(function(stream) {
-              console.log("Camera stream obtained:", stream);
-              video.srcObject = stream;
-              video.play();
-          })
-          .catch(function(error) {
-              console.error("Error accessing the camera:", error);
-              alert("Error accessing the camera: " + error.message);
-          });
-      } else {
-          alert("Your browser does not support camera access.");
-      }
+      navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
+      })
+      .then(stream => {
+          console.log("Camera stream obtained:", stream);
+          video.srcObject = stream;
+          video.play();
+      })
+      .catch(error => {
+          console.error("Error accessing the camera:", error);
+          alert("Error accessing the camera: " + error.message);
+      });
     </script>
 </body>
 </html>

@@ -22,7 +22,7 @@ public class FrontendController {
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("message", "Welcome to the Attendance System Frontend.");
-        return "index"; // Renders index.html
+        return "index";  // Renders index.html
     }
 
     // View Attendance endpoint
@@ -35,13 +35,13 @@ public class FrontendController {
             attendanceData = "Error retrieving attendance: " + e.getMessage();
         }
         model.addAttribute("attendanceData", attendanceData);
-        return "viewAttendance"; // Renders viewAttendance.html
+        return "viewAttendance";  // Renders viewAttendance.html
     }
 
-    // Capture Live Face page (GET) to show the form
+    // Display the Capture Live Face form
     @GetMapping("/captureLiveFace")
     public String captureLiveFace(Model model) {
-        return "captureLiveFace"; // Renders captureLiveFace.html
+        return "captureLiveFace";  // Renders captureLiveFace.html
     }
 
     // Process the Capture Live Face form submission
@@ -52,11 +52,11 @@ public class FrontendController {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("name", name);
         body.add("imageData", imageData);
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
         String responseMessage;
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(PYTHON_BACKEND_URL + "/capture_face", requestEntity, String.class);
@@ -65,13 +65,13 @@ public class FrontendController {
             responseMessage = "Error capturing face: " + e.getMessage();
         }
         model.addAttribute("message", responseMessage);
-        return "captureLiveFace"; // Renders captureLiveFace.html with response message
+        return "captureLiveFace";  // Renders captureLiveFace.html with the response message
     }
 
-    // Attendance Control page: shows Start and Stop Attendance options
+    // Attendance Control page: provides both Start and Stop Attendance options
     @GetMapping("/attendanceControl")
     public String attendanceControl(Model model) {
-        return "attendanceControl"; // Renders attendanceControl.html
+        return "attendanceControl";  // Renders attendanceControl.html
     }
 
     // Start Attendance endpoint
@@ -85,7 +85,7 @@ public class FrontendController {
             startMessage = "Error starting attendance system: " + e.getMessage();
         }
         model.addAttribute("controlMessage", startMessage);
-        return "attendanceControl"; // Renders attendanceControl.html with updated message
+        return "attendanceControl";  // Renders attendanceControl.html with updated message
     }
 
     // Stop Attendance endpoint
@@ -99,10 +99,10 @@ public class FrontendController {
             stopMessage = "Error stopping attendance system: " + e.getMessage();
         }
         model.addAttribute("controlMessage", stopMessage);
-        return "attendanceControl"; // Renders attendanceControl.html with updated message
+        return "attendanceControl";  // Renders attendanceControl.html with updated message
     }
 
-    // System Status endpoint
+    // System Status endpoint: retrieves status from the Python backend
     @GetMapping("/status")
     public String status(Model model) {
         String status;
@@ -112,10 +112,10 @@ public class FrontendController {
             status = "Error connecting to backend: " + e.getMessage();
         }
         model.addAttribute("status", status);
-        return "status"; // Renders status.html
+        return "status";  // Renders status.html
     }
 
-    // Known Faces endpoint: fetches a list of image filenames stored in the backend's known_faces folder
+    // Known Faces endpoint: fetches a list of filenames stored in the backend's known_faces folder
     @GetMapping("/knownFaces")
     public String knownFaces(Model model) {
         try {
@@ -126,6 +126,6 @@ public class FrontendController {
             model.addAttribute("knownFaces", new String[]{});
             model.addAttribute("message", "Error retrieving known faces: " + e.getMessage());
         }
-        return "knownFaces"; // Renders knownFaces.html
+        return "knownFaces";  // Renders knownFaces.html
     }
 }

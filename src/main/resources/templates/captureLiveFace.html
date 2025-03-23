@@ -4,55 +4,27 @@
   <meta charset="UTF-8">
   <title>Capture Live Face</title>
   <style>
-    /* Navigation styling */
-    nav {
-      background-color: #333;
-      overflow: hidden;
-    }
-    nav ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-    }
-    nav ul li {
-      float: left;
-    }
-    nav ul li a {
-      display: block;
-      color: white;
-      text-align: center;
-      padding: 14px 16px;
-      text-decoration: none;
-    }
-    nav ul li a:hover {
-      background-color: #111;
-    }
-    .content {
-      margin: 20px;
-    }
-    video, canvas, img {
-      background-color: black;
-      max-width: 100%;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 10px;
-    }
+    nav { background-color: #333; overflow: hidden; }
+    nav ul { list-style: none; padding: 0; margin: 0; }
+    nav ul li { float: left; }
+    nav ul li a { display: block; color: white; padding: 14px 16px; text-decoration: none; }
+    nav ul li a:hover { background-color: #111; }
+    .content { margin: 20px; }
+    video, canvas, img { background-color: black; max-width: 100%; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <!-- Navigation Menu -->
   <nav>
     <ul>
       <li><a th:href="@{/}">Home</a></li>
       <li><a th:href="@{/viewAttendance}">View Attendance</a></li>
       <li><a th:href="@{/captureLiveFace}">Capture Live Face</a></li>
       <li><a th:href="@{/attendanceControl}">Attendance Control</a></li>
+      <li><a th:href="@{/knownFaces}">Known Faces</a></li>
       <li><a th:href="@{/status}">System Status</a></li>
     </ul>
   </nav>
-
   <div class="content">
     <h1>Capture Live Face</h1>
     
@@ -81,12 +53,11 @@
       <button type="submit">Upload Face</button>
     </form>
     
-    <!-- Display message if one is returned -->
     <div th:if="${message}">
       <p th:text="${message}"></p>
     </div>
   </div>
-
+  
   <script>
     // Get DOM elements
     const video = document.getElementById('video');
@@ -97,11 +68,7 @@
 
     // Request access to the user's camera with explicit constraints
     navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: "user",
-        width: { ideal: 640 },
-        height: { ideal: 480 }
-      }
+      video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
     })
     .then(stream => {
       console.log("Camera stream obtained:", stream);
@@ -115,16 +82,12 @@
 
     // Capture a snapshot when the "Capture Photo" button is clicked
     snapButton.addEventListener('click', function() {
-      // Set canvas dimensions to match video dimensions
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const context = canvas.getContext('2d');
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      // Convert canvas image to a base64-encoded data URL (JPEG)
       const dataURL = canvas.toDataURL('image/jpeg');
-      // Display the captured image
       snapshotImg.src = dataURL;
-      // Set the hidden input's value to the captured image data
       imageDataInput.value = dataURL;
       console.log("Captured image data set:", dataURL.substring(0, 30) + "...");
     });
