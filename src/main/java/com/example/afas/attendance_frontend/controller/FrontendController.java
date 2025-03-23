@@ -15,7 +15,7 @@ public class FrontendController {
     @Autowired
     private RestTemplate restTemplate;
 
-    // Update this URL with your deployed Python backend URL.
+    // Update with your deployed Python backend URL.
     private final String PYTHON_BACKEND_URL = "https://python-backend-production-aa78.up.railway.app";
 
     // Home page endpoint
@@ -38,7 +38,7 @@ public class FrontendController {
         return "viewAttendance"; // Renders viewAttendance.html
     }
 
-    // Display the Capture Live Face form
+    // Capture Live Face page (GET) to show the form
     @GetMapping("/captureLiveFace")
     public String captureLiveFace(Model model) {
         return "captureLiveFace"; // Renders captureLiveFace.html
@@ -68,13 +68,13 @@ public class FrontendController {
         return "captureLiveFace"; // Renders captureLiveFace.html with response message
     }
 
-    // Attendance Control page: provides both Start and Stop Attendance options
+    // Attendance Control page: shows Start and Stop Attendance options
     @GetMapping("/attendanceControl")
     public String attendanceControl(Model model) {
         return "attendanceControl"; // Renders attendanceControl.html
     }
 
-    // Start Attendance endpoint: calls the Python backend to start the capture loop
+    // Start Attendance endpoint
     @PostMapping("/startAttendance")
     public String startAttendance(Model model) {
         String startMessage;
@@ -88,7 +88,7 @@ public class FrontendController {
         return "attendanceControl"; // Renders attendanceControl.html with updated message
     }
 
-    // Stop Attendance endpoint: calls the Python backend to stop the capture loop
+    // Stop Attendance endpoint
     @PostMapping("/stopAttendance")
     public String stopAttendance(Model model) {
         String stopMessage;
@@ -102,7 +102,7 @@ public class FrontendController {
         return "attendanceControl"; // Renders attendanceControl.html with updated message
     }
 
-    // System Status endpoint: retrieves status from the Python backend
+    // System Status endpoint
     @GetMapping("/status")
     public String status(Model model) {
         String status;
@@ -115,7 +115,7 @@ public class FrontendController {
         return "status"; // Renders status.html
     }
 
-    // Known Faces endpoint: retrieves a list of filenames for images stored in the known_faces folder
+    // Known Faces endpoint: fetches a list of image filenames stored in the backend's known_faces folder
     @GetMapping("/knownFaces")
     public String knownFaces(Model model) {
         try {
