@@ -1,4 +1,4 @@
-# Created at 2025-03-24T12:54:34.024
+# Created at 2025-03-24T12:58:28.244
 Boot Manifest-JAR contains absolute paths in classpath 'D:\Main\SD\Projects\Python\DeepLearning\AutomatedFacialAttendanceSystem\spring-boot-frontend\target\test-classes'
 Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
 'other' has different root
