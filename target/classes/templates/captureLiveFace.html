@@ -62,13 +62,13 @@
       const dataURL = canvas.toDataURL('image/jpeg');
       console.log("Captured image data (first 50 chars):", dataURL.substring(0, 50));
 
-      const formData = new FormData();
-      // For uploading a new face, include a name (prompt user for name)
       const name = prompt("Enter your name:");
       if (!name) {
         alert("Name is required!");
         return;
       }
+
+      const formData = new FormData();
       formData.append("name", name);
       formData.append("imageData", dataURL);
 

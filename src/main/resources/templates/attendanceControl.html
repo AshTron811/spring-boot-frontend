@@ -45,7 +45,6 @@
     const captureButton = document.getElementById('captureButton');
     const responseMessage = document.getElementById('responseMessage');
 
-    // Start video stream
     navigator.mediaDevices.getUserMedia({
       video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
     })
@@ -60,8 +59,6 @@
     });
 
     captureButton.addEventListener('click', () => {
-      console.log("Attendance capture button pressed.");
-      // Ensure video dimensions are ready
       if (video.videoWidth === 0 || video.videoHeight === 0) {
         responseMessage.textContent = "Video not ready, please try again shortly.";
         return;
@@ -80,10 +77,16 @@
         method: "POST",
         body: formData
       })
-      .then(response => response.json())
+      .then(response => {
+        console.log("Attendance POST response:", response);
+        if (!response.ok) {
+          throw new Error("HTTP error! Status: " + response.status);
+        }
+        return response.json();
+      })
       .then(data => {
-        responseMessage.textContent = data.message || data.error;
         console.log("Response from start_attendance:", data);
+        responseMessage.textContent = data.message || data.error;
       })
       .catch(err => {
         console.error("Error sending attendance request:", err);

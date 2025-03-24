@@ -38,7 +38,7 @@ public class FrontendController {
         return "viewAttendance";  // Renders viewAttendance.html
     }
 
-    // Capture Live Face page (for uploading new face images)
+    // Capture Live Face page (for uploading a new face image)
     @GetMapping("/captureLiveFace")
     public String captureLiveFace(Model model) {
         return "captureLiveFace";  // Renders captureLiveFace.html
@@ -55,8 +55,7 @@ public class FrontendController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultiValueMap<String, Object>> requestEntity =
-                new HttpEntity<>(body, headers);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         String responseMessage;
         try {
@@ -70,14 +69,13 @@ public class FrontendController {
         return "captureLiveFace";
     }
 
-    // Attendance Control page (to capture an image for attendance marking)
+    // Attendance Control page (for capturing an image for attendance marking)
     @GetMapping("/attendanceControl")
     public String attendanceControl(Model model) {
         return "attendanceControl";  // Renders attendanceControl.html
     }
 
-    // Endpoint to mark attendance based on a captured image.
-    // The frontend should capture an image using getUserMedia and send it as "imageData".
+    // Endpoint to mark attendance based on a captured image
     @PostMapping("/start_attendance")
     public String startAttendance(@RequestParam("imageData") String imageData, Model model) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -85,8 +83,7 @@ public class FrontendController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultiValueMap<String, Object>> requestEntity =
-                new HttpEntity<>(body, headers);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         String responseMessage;
         try {
@@ -100,7 +97,7 @@ public class FrontendController {
         return "attendanceControl";
     }
 
-    // Known Faces endpoint: lists the filenames of known face images
+    // Known Faces endpoint: list filenames of known face images
     @GetMapping("/knownFaces")
     public String knownFaces(Model model) {
         try {
@@ -115,7 +112,7 @@ public class FrontendController {
         return "knownFaces";  // Renders knownFaces.html
     }
 
-    // System Status endpoint: retrieves status from the Python backend
+    // System Status endpoint: get backend status
     @GetMapping("/status")
     public String status(Model model) {
         String status;
