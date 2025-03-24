@@ -39,6 +39,10 @@
       font-size: 16px;
       margin-top: 10px;
     }
+    #responseMessage {
+      margin-top: 20px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -60,8 +64,8 @@
     
     <!-- Live video feed -->
     <video id="video" autoplay playsinline></video>
-    <!-- Hidden canvas used to capture the snapshot -->
-    <canvas id="canvas" style="display:none;"></canvas>
+    <!-- Hidden canvas used for capturing the snapshot -->
+    <canvas id="canvas" style="display: none;"></canvas>
     
     <!-- Start Attendance Button -->
     <button id="captureButton">Start Attendance</button>
@@ -77,45 +81,60 @@
     const captureButton = document.getElementById('captureButton');
     const responseMessage = document.getElementById('responseMessage');
 
-    // Request access to the user's camera
+    // Request camera access
     navigator.mediaDevices.getUserMedia({
       video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
     })
     .then(stream => {
       video.srcObject = stream;
       video.play();
+      console.log("Camera stream started.");
     })
     .catch(err => {
       console.error("Error accessing camera:", err);
       alert("Error accessing camera: " + err.message);
     });
 
-    // Function to capture image from video and send to /start_attendance
+    // Capture the image and send to /start_attendance endpoint
     function captureAndSend() {
-      // Set canvas dimensions equal to video dimensions
+      console.log("Capture button pressed.");
+      // Ensure video dimensions are available
+      if(video.videoWidth === 0 || video.videoHeight === 0) {
+        console.error("Video dimensions not available yet.");
+        responseMessage.textContent = "Video not ready. Try again in a moment.";
+        return;
+      }
+      
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      
-      // Draw the current frame from the video onto the canvas
       const context = canvas.getContext('2d');
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
-      // Convert the canvas image to a base64-encoded data URL
       const dataURL = canvas.toDataURL('image/jpeg');
+      console.log("Captured image data (first 50 chars):", dataURL.substring(0, 50));
       
-      // Prepare the form data with the captured image
+      // Prepare form data
       const formData = new FormData();
       formData.append("imageData", dataURL);
       
-      // Send a POST request to the /start_attendance endpoint
+      // Debug: log all formData keys and values
+      for (let pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1].substring(0,50)); // Log first 50 chars of value
+      }
+      
+      // Send POST request to /start_attendance
       fetch("/start_attendance", {
         method: "POST",
         body: formData
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("HTTP error! Status: " + response.status);
+        }
+        return response.json();
+      })
       .then(data => {
-        // Display the response message
-        responseMessage.textContent = data.message || data.error;
+        console.log("Response from /start_attendance:", data);
+        responseMessage.textContent = data.message ? data.message : data.error;
       })
       .catch(err => {
         console.error("Error sending attendance request:", err);
@@ -123,7 +142,6 @@
       });
     }
 
-    // Bind the button click to the captureAndSend function
     captureButton.addEventListener('click', captureAndSend);
   </script>
 </body>
