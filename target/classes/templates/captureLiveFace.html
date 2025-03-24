@@ -26,70 +26,65 @@
     </ul>
   </nav>
   <div class="content">
-    <h1>Capture Live Face</h1>
-    
-    <!-- Live camera feed -->
-    <div>
-      <video id="video" autoplay playsinline style="width: 640px; height: 480px;"></video>
-      <canvas id="canvas" style="display: none;"></canvas>
-    </div>
-    
-    <!-- Button to capture snapshot -->
-    <button id="snap">Capture Photo</button>
-    
-    <!-- Display the captured snapshot -->
-    <div>
-      <h2>Snapshot</h2>
-      <img id="snapshot" alt="Captured Image" />
-    </div>
-    
-    <!-- Form to upload the captured image along with a name -->
-    <form id="uploadForm" th:action="@{/captureLiveFaceSubmit}" method="post" enctype="multipart/form-data">
-      <label for="name">Enter Name:</label>
-      <input type="text" id="name" name="name" required />
-      <!-- Hidden input to store base64 image data -->
-      <input type="hidden" id="imageData" name="imageData" />
-      <br/><br/>
-      <button type="submit">Upload Face</button>
-    </form>
-    
-    <div th:if="${message}">
-      <p th:text="${message}"></p>
-    </div>
+    <h1>Capture New Face</h1>
+    <p>Use the camera to capture a new face and add it to the system.</p>
+    <!-- Live video feed -->
+    <video id="video" autoplay playsinline style="width: 640px; height: 480px;"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <br>
+    <button id="uploadButton">Upload Face</button>
+    <p id="uploadMessage"></p>
   </div>
-  
   <script>
-    // Get DOM elements
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
-    const snapshotImg = document.getElementById('snapshot');
-    const snapButton = document.getElementById('snap');
-    const imageDataInput = document.getElementById('imageData');
+    const uploadButton = document.getElementById('uploadButton');
+    const uploadMessage = document.getElementById('uploadMessage');
 
-    // Request access to the user's camera with explicit constraints
     navigator.mediaDevices.getUserMedia({
       video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }
     })
     .then(stream => {
-      console.log("Camera stream obtained:", stream);
       video.srcObject = stream;
       video.play();
+      console.log("Camera stream started for face upload.");
     })
-    .catch(error => {
-      console.error("Error accessing the camera:", error);
-      alert("Error accessing the camera: " + error.message);
+    .catch(err => {
+      console.error("Error accessing camera:", err);
+      alert("Error accessing camera: " + err.message);
     });
 
-    // Capture a snapshot when the "Capture Photo" button is clicked
-    snapButton.addEventListener('click', function() {
+    uploadButton.addEventListener('click', () => {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const context = canvas.getContext('2d');
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       const dataURL = canvas.toDataURL('image/jpeg');
-      snapshotImg.src = dataURL;
-      imageDataInput.value = dataURL;
-      console.log("Captured image data set:", dataURL.substring(0, 30) + "...");
+      console.log("Captured image data (first 50 chars):", dataURL.substring(0, 50));
+
+      const formData = new FormData();
+      // For uploading a new face, include a name (prompt user for name)
+      const name = prompt("Enter your name:");
+      if (!name) {
+        alert("Name is required!");
+        return;
+      }
+      formData.append("name", name);
+      formData.append("imageData", dataURL);
+
+      fetch("/capture_face", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        uploadMessage.textContent = data.message || data.error;
+        console.log("Response from capture_face:", data);
+      })
+      .catch(err => {
+        console.error("Error sending face upload request:", err);
+        uploadMessage.textContent = "Error: " + err.message;
+      });
     });
   </script>
 </body>

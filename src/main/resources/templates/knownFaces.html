@@ -41,7 +41,6 @@
     </style>
 </head>
 <body>
-  <!-- Navigation Menu -->
   <nav>
     <ul>
       <li><a th:href="@{/}">Home</a></li>
@@ -52,7 +51,6 @@
       <li><a th:href="@{/status}">System Status</a></li>
     </ul>
   </nav>
-  
   <div class="content">
     <h1>Known Faces</h1>
     <div th:if="${knownFaces == null or #lists.isEmpty(knownFaces)}">
@@ -60,7 +58,6 @@
     </div>
     <div th:if="${knownFaces != null}">
       <div th:each="face : ${knownFaces}" class="face-container">
-         <!-- Construct the image URL using the backend's URL -->
          <img th:src="@{'https://python-backend-production-aa78.up.railway.app/known_faces/' + ${face}}" alt="Face Image" />
          <p th:text="${face}">Face Name</p>
       </div>

@@ -38,13 +38,13 @@ public class FrontendController {
         return "viewAttendance";  // Renders viewAttendance.html
     }
 
-    // Capture Live Face page (for uploading a new face without marking attendance)
+    // Capture Live Face page (for uploading new face images)
     @GetMapping("/captureLiveFace")
     public String captureLiveFace(Model model) {
         return "captureLiveFace";  // Renders captureLiveFace.html
     }
 
-    // Process the Capture Live Face form submission to upload a new face image (does not mark attendance)
+    // Endpoint to upload a new face image (does not mark attendance)
     @PostMapping("/capture_face")
     public String captureFace(@RequestParam("name") String name,
                               @RequestParam("imageData") String imageData,
@@ -55,11 +55,13 @@ public class FrontendController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity =
+                new HttpEntity<>(body, headers);
 
         String responseMessage;
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(PYTHON_BACKEND_URL + "/capture_face", requestEntity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    PYTHON_BACKEND_URL + "/capture_face", requestEntity, String.class);
             responseMessage = response.getBody();
         } catch (Exception e) {
             responseMessage = "Error uploading face: " + e.getMessage();
@@ -68,15 +70,14 @@ public class FrontendController {
         return "captureLiveFace";
     }
 
-    // Attendance Control page: this page includes a live video feed and a "Start Attendance" button.
+    // Attendance Control page (to capture an image for attendance marking)
     @GetMapping("/attendanceControl")
     public String attendanceControl(Model model) {
         return "attendanceControl";  // Renders attendanceControl.html
     }
 
-    // Endpoint to mark attendance based on an image captured on the client.
-    // When "Start Attendance" is pressed, the frontend should capture an image via getUserMedia,
-    // convert it to a base64 string, and send it as the "imageData" field.
+    // Endpoint to mark attendance based on a captured image.
+    // The frontend should capture an image using getUserMedia and send it as "imageData".
     @PostMapping("/start_attendance")
     public String startAttendance(@RequestParam("imageData") String imageData, Model model) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -84,11 +85,13 @@ public class FrontendController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity =
+                new HttpEntity<>(body, headers);
 
         String responseMessage;
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(PYTHON_BACKEND_URL + "/start_attendance", requestEntity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    PYTHON_BACKEND_URL + "/start_attendance", requestEntity, String.class);
             responseMessage = response.getBody();
         } catch (Exception e) {
             responseMessage = "Error marking attendance: " + e.getMessage();
@@ -97,25 +100,12 @@ public class FrontendController {
         return "attendanceControl";
     }
 
-    // Stop Attendance endpoint (if using a live capture loop; may be unused in this mode)
-    @PostMapping("/stop_attendance")
-    public String stopAttendance(Model model) {
-        String responseMessage;
-        try {
-            ResponseEntity<String> response = restTemplate.postForEntity(PYTHON_BACKEND_URL + "/stop_attendance", null, String.class);
-            responseMessage = response.getBody();
-        } catch (Exception e) {
-            responseMessage = "Error stopping attendance system: " + e.getMessage();
-        }
-        model.addAttribute("controlMessage", responseMessage);
-        return "attendanceControl";
-    }
-
-    // Known Faces endpoint: fetch list of filenames of known face images
+    // Known Faces endpoint: lists the filenames of known face images
     @GetMapping("/knownFaces")
     public String knownFaces(Model model) {
         try {
-            ResponseEntity<String[]> response = restTemplate.getForEntity(PYTHON_BACKEND_URL + "/known_faces", String[].class);
+            ResponseEntity<String[]> response = restTemplate.getForEntity(
+                    PYTHON_BACKEND_URL + "/known_faces", String[].class);
             String[] knownFacesArray = response.getBody();
             model.addAttribute("knownFaces", knownFacesArray);
         } catch (Exception e) {
@@ -125,7 +115,7 @@ public class FrontendController {
         return "knownFaces";  // Renders knownFaces.html
     }
 
-    // System Status endpoint: get backend status
+    // System Status endpoint: retrieves status from the Python backend
     @GetMapping("/status")
     public String status(Model model) {
         String status;
