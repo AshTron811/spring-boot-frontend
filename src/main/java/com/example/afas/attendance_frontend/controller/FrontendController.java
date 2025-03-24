@@ -18,14 +18,12 @@ public class FrontendController {
     // Update with your deployed Python backend URL.
     private final String PYTHON_BACKEND_URL = "https://python-backend-production-aa78.up.railway.app";
 
-    // Home page endpoint
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("message", "Welcome to the Attendance System Frontend.");
         return "index";  // Renders index.html
     }
 
-    // View Attendance endpoint
     @GetMapping("/viewAttendance")
     public String viewAttendance(Model model) {
         String attendanceData;
@@ -38,13 +36,11 @@ public class FrontendController {
         return "viewAttendance";  // Renders viewAttendance.html
     }
 
-    // Capture Live Face page (for uploading a new face image)
     @GetMapping("/captureLiveFace")
     public String captureLiveFace(Model model) {
         return "captureLiveFace";  // Renders captureLiveFace.html
     }
 
-    // Endpoint to upload a new face image (does not mark attendance)
     @PostMapping("/capture_face")
     public String captureFace(@RequestParam("name") String name,
                               @RequestParam("imageData") String imageData,
@@ -69,13 +65,11 @@ public class FrontendController {
         return "captureLiveFace";
     }
 
-    // Attendance Control page (for capturing an image for attendance marking)
     @GetMapping("/attendanceControl")
     public String attendanceControl(Model model) {
         return "attendanceControl";  // Renders attendanceControl.html
     }
 
-    // Endpoint to mark attendance based on a captured image
     @PostMapping("/start_attendance")
     public String startAttendance(@RequestParam("imageData") String imageData, Model model) {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -97,7 +91,6 @@ public class FrontendController {
         return "attendanceControl";
     }
 
-    // Known Faces endpoint: list filenames of known face images
     @GetMapping("/knownFaces")
     public String knownFaces(Model model) {
         try {
@@ -112,7 +105,6 @@ public class FrontendController {
         return "knownFaces";  // Renders knownFaces.html
     }
 
-    // System Status endpoint: get backend status
     @GetMapping("/status")
     public String status(Model model) {
         String status;
