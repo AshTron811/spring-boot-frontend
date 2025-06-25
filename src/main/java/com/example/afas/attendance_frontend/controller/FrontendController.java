@@ -16,7 +16,7 @@ public class FrontendController {
     private RestTemplate restTemplate;
 
     // Update with your deployed Python backend URL.
-    private final String PYTHON_BACKEND_URL = "https://python-backend-production-aa78.up.railway.app";
+    private final String PYTHON_BACKEND_URL = "https://python-backend-t6dr.onrender.com";
 
     @GetMapping("/")
     public String home(Model model) {
