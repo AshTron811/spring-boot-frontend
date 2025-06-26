@@ -73,7 +73,7 @@
       const formData = new FormData();
       formData.append("imageData", dataURL);
 
-      fetch("/start_attendance", {
+      fetch("https://python-backend-t6dr.onrender.com/start_attendance", {
         method: "POST",
         body: formData
       })
