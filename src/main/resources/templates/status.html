@@ -4,28 +4,29 @@
   <meta charset="UTF-8">
   <title>System Status</title>
   <style>
-    nav { background-color: #333; overflow: hidden; }
-    nav ul { list-style: none; padding: 0; margin: 0; }
-    nav ul li { float: left; }
-    nav ul li a { display: block; color: white; padding: 14px 16px; text-decoration: none; }
-    nav ul li a:hover { background-color: #111; }
-    .content { margin: 20px; }
+    /* your nav styles… */
   </style>
+  <script>
+    const API = "https://python-backend-t6dr.onrender.com";
+    async function checkStatus() {
+      const el = document.getElementById("statusMessage");
+      try {
+        const res = await fetch(`${API}/`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const txt = await res.text();
+        el.textContent = txt;
+      } catch (e) {
+        el.textContent = "Error connecting to backend: " + e;
+      }
+    }
+    window.addEventListener("load", checkStatus);
+  </script>
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a th:href="@{/}">Home</a></li>
-      <li><a th:href="@{/viewAttendance}">View Attendance</a></li>
-      <li><a th:href="@{/captureLiveFace}">Capture Live Face</a></li>
-      <li><a th:href="@{/attendanceControl}">Attendance Control</a></li>
-      <li><a th:href="@{/knownFaces}">Known Faces</a></li>
-      <li><a th:href="@{/status}">System Status</a></li>
-    </ul>
-  </nav>
+  <nav><!-- your nav --></nav>
   <div class="content">
     <h1>System Status</h1>
-    <p th:text="${status}">Status information will appear here.</p>
+    <p id="statusMessage">Checking…</p>
   </div>
 </body>
 </html>
